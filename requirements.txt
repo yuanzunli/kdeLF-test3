@@ -1,0 +1,6 @@
+celerite
+corner
+emcee
+h5py
+matplotlib
+myst-nb

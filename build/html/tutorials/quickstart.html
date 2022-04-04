@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quickstart &mdash; kdeLF</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/togglebutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Plot" href="plot.html" />
+    <link rel="prev" title="FAQ" href="../user/faq.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> kdeLF
+          </a>
+              <div class="version">
+                1.3.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/KdeLF.html">The class KdeLF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#monte-carlo-sampling-from-a-known-lf">Monte Carlo sampling from a known LF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#apply-kdelf-to-the-simulated-sample">Apply kdeLF to the simulated sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mcmc-uncertainty-estimation">MCMC &amp; uncertainty estimation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel.html">Parallelization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KS-test.html">KS-test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MCMC.html">MCMC</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kdeLF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Quickstart</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/quickstart.ipynb" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="quickstart">
+<span id="id1"></span><h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline"></a></h1>
+<p>To get you started, here’s an annotated, fully-functional example that demonstrates a standard usage pattern for kdeLF. I will generate a synthetic dataset (or called simulated sample) from a known luminosity function (LF), and then apply kdeLF to it.</p>
+<section id="monte-carlo-sampling-from-a-known-lf">
+<h2>Monte Carlo sampling from a known LF<a class="headerlink" href="#monte-carlo-sampling-from-a-known-lf" title="Permalink to this headline"></a></h2>
+<p>The differential LF of a sample of objects is defined as the number of objects per unit comoving
+volume per unit luminosity interval,</p>
+<div class="math notranslate nohighlight">
+\[
+\phi(\mathcal{L},z)=\frac{d^{2}N}{dVd\mathcal{L}},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(z\)</span> denotes redshift and <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> denotes the luminosity.
+Due to the typically large span of the luminosities, it is
+often defined in terms of <span class="math notranslate nohighlight">\(\log \mathcal{L}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\phi(L,z)=\frac{d^{2}N}{dVdL},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(L\equiv \log \mathcal{L}\)</span> denotes the logarithm of luminosity. Our input LF has a pure density evolution form, with the density evolution function of</p>
+<div class="math notranslate nohighlight">
+\[ 
+e(z)=p_0\left[\left(\frac{1+z_c}{1+z}\right)^{p_1} + \left(\frac{1+z_c}{1+z}\right)^{p_2}\right]^{-1},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_0\)</span> is the normalized parameter of <span class="math notranslate nohighlight">\(e(z)\)</span> given by</p>
+<div class="math notranslate nohighlight">
+\[
+p_0=\left[(1+z_c)^{p_1}+(1+z_c)^{p_2}\right],
+\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[
+\phi(L,z)=n_0e(z)\left(\frac{10^L}{L_*}\right)^{-\alpha}\exp\left[-\left(\frac{10^L}{L_*}\right)^{\beta}\right].
+\]</div>
+<p>In the above equations, <span class="math notranslate nohighlight">\(z_c\)</span>=2.0, <span class="math notranslate nohighlight">\(p_1\)</span>=1.5, <span class="math notranslate nohighlight">\(p_2\)</span>=<span class="math notranslate nohighlight">\(-5\)</span>, <span class="math notranslate nohighlight">\(L_*\)</span>=<span class="math notranslate nohighlight">\(10^{25}\)</span>, <span class="math notranslate nohighlight">\(n_0\)</span>=<span class="math notranslate nohighlight">\(10^{-5}\)</span>, <span class="math notranslate nohighlight">\(\alpha\)</span>=0.45, <span class="math notranslate nohighlight">\(\beta\)</span>=0.3, are free parameters. The users may change the parameter values, or even provide a quite different form of input LF for the Monte Carlo sampling.</p>
+<p>The first thing that we need to do is import the necessary modules:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">dblquad</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize_scalar</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, we’ll code up a Python function that returns the density evolution function <span class="math notranslate nohighlight">\(e(z)\)</span> and the input (true) LF <span class="math notranslate nohighlight">\(\phi(L,z)\)</span>, called <code class="docutils literal notranslate"><span class="pre">phi_true</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zc</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span><span class="n">L0</span><span class="p">,</span><span class="n">n0</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">4.5</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">0.45</span><span class="p">,</span><span class="mf">0.30</span>
+
+<span class="k">def</span> <span class="nf">e</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">rho</span><span class="o">=</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">zc</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">z</span><span class="p">))</span><span class="o">**</span><span class="n">p1</span> <span class="o">+</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">zc</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">z</span><span class="p">))</span><span class="o">**</span><span class="n">p2</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">zc</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mf">0.0</span><span class="p">))</span><span class="o">**</span><span class="n">p1</span> <span class="o">+</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">zc</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mf">0.0</span><span class="p">))</span><span class="o">**</span><span class="n">p2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rho</span>
+    
+<span class="k">def</span> <span class="nf">phi_true</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">L</span><span class="p">):</span>
+    <span class="n">L_z</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="n">L0</span>
+    <span class="n">rho</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="n">n0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">L</span><span class="o">/</span><span class="n">L_z</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">L</span><span class="o">/</span><span class="n">L_z</span><span class="p">)</span><span class="o">**</span><span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rho</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, we’ll code up a Python function that returns the truncation boundary <span class="math notranslate nohighlight">\(f_{\mathrm{lim}}(z)\)</span> of the sample, called <code class="docutils literal notranslate"><span class="pre">f_lim</span></code>. Here we consider the case for the common flux-limited samples, <span class="math notranslate nohighlight">\(f_{\mathrm{lim}}(z)\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\mathrm{lim}}(z)=4\pi d_L^{2}(z)(1/K(z))F_{\mathrm{lim}},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(d_L(z)\)</span> is the luminosity distance, <span class="math notranslate nohighlight">\(F_{\mathrm{lim}}\)</span> is the survey flux limit, and <span class="math notranslate nohighlight">\(K(z)\)</span> represents the <span class="math notranslate nohighlight">\(K\)</span>-correction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flux</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span><span class="mf">0.75</span>
+<span class="n">H0</span><span class="p">,</span><span class="n">Om0</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.3</span> 
+<span class="n">Mpc</span><span class="o">=</span><span class="mf">3.08567758E+022</span> 
+<span class="n">c</span><span class="o">=</span><span class="mf">299792.458</span>
+<span class="kn">from</span> <span class="nn">astropy.cosmology</span> <span class="kn">import</span> <span class="n">FlatLambdaCDM</span>
+<span class="n">cosmo</span> <span class="o">=</span> <span class="n">FlatLambdaCDM</span><span class="p">(</span><span class="n">H0</span><span class="o">=</span><span class="n">H0</span><span class="p">,</span> <span class="n">Om0</span><span class="o">=</span><span class="n">Om0</span><span class="p">)</span>
+<span class="c1">## your own f_lim function : </span>
+<span class="k">def</span> <span class="nf">f_lim</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">St</span><span class="o">=</span><span class="n">flux</span>
+    <span class="n">dist</span><span class="o">=</span><span class="n">cosmo</span><span class="o">.</span><span class="n">luminosity_distance</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">ans</span><span class="o">=</span><span class="n">dist</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">ans</span><span class="o">*</span><span class="n">Mpc</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">St</span><span class="o">*</span><span class="mf">1E-26</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span><span class="o">+</span><span class="n">z</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">alpha</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Set the redshift and luminosity ranges, as well as the desired sample size for the simulated sample:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z1</span><span class="p">,</span><span class="n">z2</span><span class="p">,</span><span class="n">L1</span><span class="p">,</span><span class="n">L2</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">6.0</span><span class="p">,</span><span class="mf">22.0</span><span class="p">,</span><span class="mf">30.0</span>
+<span class="n">ndata</span><span class="o">=</span><span class="mi">8000</span>
+<span class="c1">#The actual sample size of the simulated sample will not exactly equals to ndata, but should be very close.  </span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following code will estimate the solid angle <code class="docutils literal notranslate"><span class="pre">omega</span></code> (unit of <span class="math notranslate nohighlight">\(sr\)</span>) of the simulated sample:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rho</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">dvdz</span><span class="o">=</span><span class="n">cosmo</span><span class="o">.</span><span class="n">differential_comoving_volume</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">result</span><span class="o">=</span><span class="n">phi_true</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">L</span><span class="p">)</span><span class="o">*</span><span class="n">dvdz</span>  
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">ans</span><span class="o">=</span><span class="n">dblquad</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="n">L1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="n">L2</span><span class="p">)</span>
+<span class="n">ans_lim</span><span class="o">=</span><span class="n">dblquad</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="n">f_lim</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="n">L2</span><span class="p">)</span>
+<span class="n">omega</span><span class="o">=</span><span class="n">ndata</span><span class="o">/</span><span class="n">ans_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">N_tot</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">omega</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The solid angle &#39;omega&#39; of the simulated sample:&quot;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">omega</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The solid angle &#39;omega&#39; of the simulated sample: 0.0120
+</pre></div>
+</div>
+</div>
+</div>
+<p>We then code up the marginal probability density distributions (PDFs) for <span class="math notranslate nohighlight">\(z\)</span> and <span class="math notranslate nohighlight">\(L\)</span>, and prepare for a Monte Carlo sampling:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pz</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>             <span class="c1"># the PDF of z, not normalized</span>
+    <span class="n">dvdz</span><span class="o">=</span><span class="n">cosmo</span><span class="o">.</span><span class="n">differential_comoving_volume</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>    
+    <span class="k">return</span> <span class="n">e</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">dvdz</span>
+
+<span class="k">def</span> <span class="nf">pl</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>         <span class="c1"># the PDF of L, not normalized </span>
+    <span class="n">L_z</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="n">L0</span>
+    <span class="n">result</span><span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">L</span><span class="o">/</span><span class="n">L_z</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">L</span><span class="o">/</span><span class="n">L_z</span><span class="p">)</span><span class="o">**</span><span class="n">beta</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">ans</span><span class="o">=</span><span class="n">quad</span><span class="p">(</span><span class="n">pz</span><span class="p">,</span><span class="n">z1</span><span class="p">,</span><span class="n">z2</span><span class="p">)</span>
+<span class="n">nomz</span><span class="o">=</span><span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">ans</span><span class="o">=</span><span class="n">quad</span><span class="p">(</span><span class="n">pl</span><span class="p">,</span><span class="n">L1</span><span class="p">,</span><span class="n">L2</span><span class="p">)</span>
+<span class="n">noml</span><span class="o">=</span><span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1">#print(&#39;nomz,noml&#39;,nomz,noml)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="o">-</span><span class="n">pz</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">nomz</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bounded&#39;</span><span class="p">)</span>
+<span class="n">zmp</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">x</span>
+<span class="n">max_pz</span><span class="o">=-</span><span class="n">res</span><span class="o">.</span><span class="n">fun</span>
+<span class="c1">#print(&#39;zmax&#39;,zmp,max_pz)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="k">lambda</span> <span class="n">L</span><span class="p">:</span> <span class="o">-</span><span class="n">pl</span><span class="p">(</span><span class="n">L</span><span class="p">)</span><span class="o">/</span><span class="n">noml</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bounded&#39;</span><span class="p">)</span>
+<span class="n">lmp</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">x</span>
+<span class="n">max_pl</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">,</span><span class="n">pl</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span><span class="o">/</span><span class="n">noml</span><span class="p">)</span>
+<span class="c1">#print(&#39;Lmax&#39;,lmp,max_pl)</span>
+<span class="n">Lambta_z</span><span class="o">=</span><span class="mf">1.0</span><span class="o">/</span><span class="n">max_pz</span>
+<span class="n">Lambta_L</span><span class="o">=</span><span class="mf">1.0</span><span class="o">/</span><span class="n">max_pl</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Start sampling with the rejection method：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">seed</span><span class="p">,</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">cpu_count</span>
+        
+<span class="n">cores</span> <span class="o">=</span> <span class="n">cpu_count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">N_simu</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">N_tot</span><span class="o">/</span><span class="n">cores</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">sampler</span><span class="p">(</span><span class="n">ir</span><span class="p">):</span>
+    <span class="n">rst</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">if</span> <span class="n">ir</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">irs</span><span class="o">=</span><span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N_simu</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">irs</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">N_simu</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">irs</span><span class="p">:</span>        
+        <span class="n">seed</span><span class="p">()</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>            
+            <span class="n">si1</span><span class="o">=</span><span class="n">random</span><span class="p">()</span>
+            <span class="n">Delta_z</span><span class="o">=</span><span class="n">z1</span><span class="o">+</span><span class="p">(</span><span class="n">z2</span><span class="o">-</span><span class="n">z1</span><span class="p">)</span><span class="o">*</span><span class="n">si1</span>
+            <span class="n">si2</span><span class="o">=</span><span class="n">random</span><span class="p">()</span>           
+            <span class="n">Judge_z</span><span class="o">=</span><span class="n">Lambta_z</span><span class="o">*</span><span class="n">pz</span><span class="p">(</span><span class="n">Delta_z</span><span class="p">)</span><span class="o">/</span><span class="n">nomz</span>
+            <span class="k">if</span> <span class="n">si2</span><span class="o">&lt;=</span><span class="n">Judge_z</span><span class="p">:</span>
+                <span class="n">z_simu</span><span class="o">=</span><span class="n">Delta_z</span>
+                <span class="k">break</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>            
+            <span class="n">Xi_L1</span><span class="o">=</span><span class="n">random</span><span class="p">()</span>
+            <span class="n">Delta_L</span><span class="o">=</span><span class="n">L1</span><span class="o">+</span><span class="p">(</span><span class="n">L2</span><span class="o">-</span><span class="n">L1</span><span class="p">)</span><span class="o">*</span><span class="n">Xi_L1</span>
+            <span class="n">Xi_L2</span><span class="o">=</span><span class="n">random</span><span class="p">()</span>   
+            <span class="n">Judge_L</span><span class="o">=</span><span class="n">Lambta_L</span><span class="o">*</span><span class="n">pl</span><span class="p">(</span><span class="n">Delta_L</span><span class="p">)</span><span class="o">/</span><span class="n">noml</span>
+            <span class="k">if</span> <span class="n">Xi_L2</span><span class="o">&lt;=</span><span class="n">Judge_L</span><span class="p">:</span>
+                <span class="n">L_simu</span><span class="o">=</span><span class="n">Delta_L</span>
+                <span class="k">break</span>            
+    
+        <span class="n">Llim</span><span class="o">=</span><span class="n">f_lim</span><span class="p">(</span><span class="n">z_simu</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">L_simu</span><span class="o">&gt;</span><span class="n">Llim</span><span class="p">:</span>
+            <span class="n">rst</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">z_simu</span><span class="p">,</span><span class="n">L_simu</span><span class="p">))</span>          
+    <span class="k">return</span> <span class="n">rst</span>
+
+<span class="n">ps</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span>        
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span> <span class="c1"># Create a multiprocessing Pool</span>
+    <span class="n">rslt</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sampler</span><span class="p">,</span> <span class="n">ps</span><span class="p">)</span>  <span class="c1"># process data_inputs iterable with pool</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rslt</span><span class="p">)):</span>    
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rslt</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.6f</span><span class="s1">&#39;</span> <span class="o">%</span><span class="k">rslt</span>[i][j][0],&#39;%.6f&#39; %rslt[i][j][1],file=f)
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████| 272350/272350 [03:54&lt;00:00, 1161.95it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The synthetic data has been saved to to <code class="docutils literal notranslate"><span class="pre">data.txt</span></code>. The following code will plot the synthetic data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> 
+    <span class="n">red</span><span class="p">,</span><span class="n">lum</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;total number:&#39;</span><span class="p">,</span><span class="n">red</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>    
+<span class="n">zs</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">ls</span><span class="o">=</span><span class="n">f_lim</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span> 
+<span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span><span class="n">ls</span><span class="p">,</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">),</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$f_{\mathrm</span><span class="si">{lim}</span><span class="s1">}(z)$&#39;</span><span class="p">)</span>      
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">red</span><span class="p">,</span><span class="n">lum</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;simulated data&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>total number: 7873
+</pre></div>
+</div>
+<img alt="../_images/quickstart_18_1.png" src="../_images/quickstart_18_1.png" />
+</div>
+</div>
+</section>
+<section id="apply-kdelf-to-the-simulated-sample">
+<h2>Apply kdeLF to the simulated sample<a class="headerlink" href="#apply-kdelf-to-the-simulated-sample" title="Permalink to this headline"></a></h2>
+<p>Set the range of redshift. Generally we let Z1 be slightly less than the minimum redshift of sample, and Z2 be slightly greater than the maximum redshift:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">red</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">red</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.014599 4.810231
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Z1</span><span class="p">,</span> <span class="n">Z2</span> <span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">4.90</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The main interface provided by kdeLF is the <code class="docutils literal notranslate"><span class="pre">KdeLF</span></code> object. It acts as the interface that receives the input of required and optional arguments to initialize a calculation. The following code will initialize a KdeLF instance, named “lf1”:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kdeLF</span> <span class="kn">import</span> <span class="n">kdeLF</span> 
+
+<span class="n">lf1</span> <span class="o">=</span> <span class="n">kdeLF</span><span class="o">.</span><span class="n">KdeLF</span><span class="p">(</span><span class="n">sample_file</span><span class="o">=</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="n">solid_angle</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="n">Z1</span><span class="p">,</span><span class="n">Z2</span><span class="p">],</span> <span class="n">f_lim</span><span class="o">=</span><span class="n">f_lim</span><span class="p">,</span> 
+                  <span class="n">H0</span><span class="o">=</span><span class="n">H0</span><span class="p">,</span> <span class="n">Om0</span><span class="o">=</span><span class="n">Om0</span><span class="p">,</span> <span class="n">small_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">adaptive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The first four arguments are required and the others are optional. <code class="docutils literal notranslate"><span class="pre">sample_file</span></code> is the name of sample file that contains at least two columns of data for <span class="math notranslate nohighlight">\(z\)</span> and <span class="math notranslate nohighlight">\(L\)</span> (or absolute magnitude <span class="math notranslate nohighlight">\(M\)</span>). <code class="docutils literal notranslate"><span class="pre">zbin</span></code> is the redshift range <span class="math notranslate nohighlight">\([Z_1,Z_2]\)</span>. <code class="docutils literal notranslate"><span class="pre">f_lim</span></code> is the user defined Python function calculating the truncation boundary <span class="math notranslate nohighlight">\(f_{\mathrm{lim}}(z)\)</span> of sample, and <code class="docutils literal notranslate"><span class="pre">solid_angle</span></code> is the solid angle (unit of <span class="math notranslate nohighlight">\(sr\)</span>) subtended by the sample. kdeLF adopts a Lambda Cold Dark Matter (LCDM) cosmology, but it is not limited to this specific cosmological model. The optional arguments <code class="docutils literal notranslate"><span class="pre">Om0</span></code> and <code class="docutils literal notranslate"><span class="pre">H0</span></code>, defaulting as <span class="math notranslate nohighlight">\(0.30\)</span> and 70 (km s<span class="math notranslate nohighlight">\(^{-1}\)</span> Mpc<span class="math notranslate nohighlight">\(^{-1}\)</span>), represent the <span class="math notranslate nohighlight">\(\Omega_{m}\)</span> parameter and Hubble constant for the LCDM cosmology, respectively.</p>
+<p>In our paper <a class="reference external" href="https://arxiv.org/abs/2203.06700">(Yuan et al. 2022)</a>, our KDE method provided <strong>four LF estimators. We denote the LF estimated by Equation (15) in our paper as <font color='OrangeRed'> <span class="math notranslate nohighlight">\(\hat{\phi}\)</span> </font>, and the small sample approximation by Equation (25) as <font color='OrangeRed'> <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{1}}\)</span> </font>. Their adaptive versions are denoted as <font color='OrangeRed'> <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{a}}\)</span> </font> and <font color='OrangeRed'> <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{1a}}\)</span> </font>, respectively</strong>. The other two optional arguments of <code class="docutils literal notranslate"><span class="pre">KdeLF</span></code>, <code class="docutils literal notranslate"><span class="pre">small_sample</span></code> and <code class="docutils literal notranslate"><span class="pre">adaptive</span></code>, have four different combinations, <font color='Green'> (False, False) </font>, <font color='Green'> (False, True) </font>, <font color='Green'> (True, False) </font> and <font color='Green'> (True, True) </font>, corresponding to the usages of <span class="math notranslate nohighlight">\(\hat{\phi}\)</span>, <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{a}}\)</span>, <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{1}}\)</span> and <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{1a}}\)</span>, respectively.</p>
+<p>After the above initialization, kdeLF is ready for calculating the LF using the <font color='OrangeRed'> <span class="math notranslate nohighlight">\(\hat{\phi}\)</span> </font> estimator. We can obtain the optimal bandwidths of KDE by the <code class="docutils literal notranslate"><span class="pre">KdeLF.get_optimal_h</span> <span class="pre">()</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf1</span><span class="o">.</span><span class="n">get_optimal_h</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z &amp; L data loaded
+Maximum likelihood estimation by scipy.optimize &#39;Powell&#39; method,
+redshift bin: ( 0.01 , 4.9 )
+sample size of this bin: 7872
+bandwidths for 2d estimator,
+    Initial h1 &amp; h2:      [0.15, 0.15]
+    bounds for h1 &amp; h2:   [(0.001, 1.0), (0.001, 1.0)]
+    Optimal h1 &amp; h2:
+         0.3019 0.1059
+Cost total time: 7.72  second
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.3019075 , 0.10594656])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once having the optimal bandwidths, we can get the LF estimates at any point <span class="math notranslate nohighlight">\((z, L)\)</span> in the in the domain of <span class="math notranslate nohighlight">\(\{Z_1&lt;z&lt;Z_2,~ L&gt;f_{\mathrm{lim}}(z) \}\)</span>, e.g.,</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf1</span><span class="o">.</span><span class="n">phi_kde</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,[</span><span class="mf">0.32395053</span><span class="p">,</span> <span class="mf">0.10842562</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.809333168741918e-06
+</pre></div>
+</div>
+</div>
+</div>
+<p>More often, we are interested in plotting the LF at some given redshift, which can be achieved by the <code class="docutils literal notranslate"><span class="pre">KdeLF.get_lgLF()</span></code> function. This will return a two-dimensional array giving the mesh points for <span class="math notranslate nohighlight">\(L\)</span> and the LF estimates.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lfk</span><span class="o">=</span><span class="n">lf1</span><span class="o">.</span><span class="n">get_lgLF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For comparison, we also try the adaptive KDE method: <font color='OrangeRed'> <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{a}}\)</span> </font>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf2</span> <span class="o">=</span> <span class="n">kdeLF</span><span class="o">.</span><span class="n">KdeLF</span><span class="p">(</span><span class="n">sample_file</span><span class="o">=</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="n">solid_angle</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="n">Z1</span><span class="p">,</span><span class="n">Z2</span><span class="p">],</span> <span class="n">f_lim</span><span class="o">=</span><span class="n">f_lim</span><span class="p">,</span> 
+                  <span class="n">H0</span><span class="o">=</span><span class="n">H0</span><span class="p">,</span> <span class="n">Om0</span><span class="o">=</span><span class="n">Om0</span><span class="p">,</span> <span class="n">small_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">adaptive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">lf2</span><span class="o">.</span><span class="n">get_optimal_h</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z &amp; L data loaded
+Maximum likelihood estimation by scipy.optimize &#39;Powell&#39; method,
+redshift bin: ( 0.01 , 4.9 )
+sample size of this bin: 7872
+bandwidths for 2d estimator,
+    Initial h1 &amp; h2:      [0.15, 0.15]
+    bounds for h1 &amp; h2:   [(0.001, 1.0), (0.001, 1.0)]
+    Optimal h1 &amp; h2:
+         0.3019 0.1059
+pilot bandwidths:
+    h1p &amp; h2p: 0.3019 0.1059 
+
+global bandwidths and beta for adaptive 2d estimator,
+    Initial h10, h20 &amp; beta:      [0.15 0.15 0.3 ]
+    bounds for h10, h20 &amp; beta:   [(0.001, 1.0), (0.001, 1.0), (0.01, 1.0)]
+    Optimal h10, h20 &amp; beta:
+         0.1151 0.0606 0.2505 
+
+Cost total time: 21.92  second
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.1151027 , 0.06057506, 0.25046887])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lfka</span><span class="o">=</span><span class="n">lf2</span><span class="o">.</span><span class="n">get_lgLF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It would be valuable to compare our KDE method with the classical binning estimator. kdeLF provides the <code class="docutils literal notranslate"><span class="pre">KdeLF.get_binLF</span> <span class="pre">()</span></code> function to get the LF estimates using <a class="reference external" href="https://arxiv.org/abs/2203.06700">Page &amp; Carrera (2000)</a> ‘s binning estimator, denoted as <font color='OrangeRed'> <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{bin}}\)</span> </font>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">blf</span><span class="o">=</span><span class="n">lf1</span><span class="o">.</span><span class="n">get_binLF</span><span class="p">(</span><span class="n">Lbin</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This will return a tuple containing the arrays of <span class="math notranslate nohighlight">\(L\)</span> and the LF estimates, as well as their errors. Then we plot the LFs obtained by different estimators:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_lfs</span><span class="p">(</span><span class="n">z_plot</span><span class="p">,</span><span class="n">lfk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">lfka</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">blf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">lfk1a</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">lum</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">22.0</span><span class="p">,</span><span class="mf">29.0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span> 
+    <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.13</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.82</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">phi</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">phi_true</span><span class="p">(</span><span class="n">z_plot</span><span class="p">,</span><span class="n">lum</span><span class="p">))</span>   
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lum</span><span class="p">,</span><span class="n">phi</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\phi_{\mathrm</span><span class="si">{true}</span><span class="s1">}$&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lfk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lfk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">lfk</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\phi}$&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lfka</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lfka</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">lfka</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\phi}_{\mathrm</span><span class="si">{a}</span><span class="s1">}$&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lfk1a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lfk1a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">lfk1a</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;cyan&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\phi}_{\mathrm</span><span class="si">{1a}</span><span class="s1">}$&#39;</span><span class="p">)</span>        
+    <span class="k">if</span> <span class="n">blf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">mfc</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span><span class="n">mec</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span><span class="n">mew</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\phi}_{\mathrm</span><span class="si">{bin}</span><span class="s1">}$&#39;</span><span class="p">)</span>  
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                
+                <span class="n">xerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">blf</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">blf</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+                <span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">blf</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">blf</span><span class="p">[</span><span class="mi">5</span><span class="p">])),</span>
+                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\log_</span><span class="si">{10}</span><span class="s1">( \phi(z,L) ~/~ {\rm Mpc}^{-3} ~ \Delta L^{-1} )$&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$L$&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span> 
+    <span class="n">plottitle</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$z=</span><span class="si">{0:.2f}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_plot</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">plottitle</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">blf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="o">=</span><span class="nb">max</span><span class="p">((</span><span class="nb">min</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">lum</span><span class="p">)),</span> <span class="nb">min</span><span class="p">((</span><span class="nb">max</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lum</span><span class="p">))</span>
+        <span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_lfs</span><span class="p">(</span><span class="n">z_plot</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">lfk</span><span class="o">=</span><span class="n">lfk</span><span class="p">,</span><span class="n">lfka</span><span class="o">=</span><span class="n">lfka</span><span class="p">,</span><span class="n">blf</span><span class="o">=</span><span class="n">blf</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_38_0.png" src="../_images/quickstart_38_0.png" />
+</div>
+</div>
+<p>We can plot the LFs at any redshift in the interval of <span class="math notranslate nohighlight">\((Z_1, Z_2)\)</span>：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_plot</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="n">blf</span><span class="o">=</span><span class="n">lf1</span><span class="o">.</span><span class="n">get_binLF</span><span class="p">(</span><span class="n">Lbin</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">0.75</span><span class="p">,</span><span class="mf">1.25</span><span class="p">],</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">lfka</span><span class="o">=</span><span class="n">lf2</span><span class="o">.</span><span class="n">get_lgLF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+<span class="n">plot_lfs</span><span class="p">(</span><span class="n">z_plot</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">lfka</span><span class="o">=</span><span class="n">lfka</span><span class="p">,</span><span class="n">blf</span><span class="o">=</span><span class="n">blf</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_40_0.png" src="../_images/quickstart_40_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_plot</span><span class="o">=</span><span class="mf">2.0</span>
+<span class="n">blf</span><span class="o">=</span><span class="n">lf1</span><span class="o">.</span><span class="n">get_binLF</span><span class="p">(</span><span class="n">Lbin</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">1.8</span><span class="p">,</span><span class="mf">2.2</span><span class="p">],</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">lfka</span><span class="o">=</span><span class="n">lf2</span><span class="o">.</span><span class="n">get_lgLF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+<span class="n">plot_lfs</span><span class="p">(</span><span class="n">z_plot</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">lfka</span><span class="o">=</span><span class="n">lfka</span><span class="p">,</span><span class="n">blf</span><span class="o">=</span><span class="n">blf</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_41_0.png" src="../_images/quickstart_41_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_plot</span><span class="o">=</span><span class="mf">4.0</span>
+<span class="n">blf</span><span class="o">=</span><span class="n">lf2</span><span class="o">.</span><span class="n">get_binLF</span><span class="p">(</span><span class="n">Lbin</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">lfka</span><span class="o">=</span><span class="n">lf2</span><span class="o">.</span><span class="n">get_lgLF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plot_lfs</span><span class="p">(</span><span class="n">z_plot</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">lfk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">lfka</span><span class="o">=</span><span class="n">lfka</span><span class="p">,</span><span class="n">blf</span><span class="o">=</span><span class="n">blf</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_42_0.png" src="../_images/quickstart_42_0.png" />
+</div>
+</div>
+<p>We note that the LF at z=4 given by <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{a}}\)</span> is not good, mainly because the sources near z~4 is very sparse.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">select</span><span class="o">=</span><span class="p">((</span><span class="n">red</span><span class="o">&gt;</span><span class="mf">3.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">red</span><span class="o">&lt;</span><span class="mf">4.5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number:&#39;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">red</span><span class="p">[</span><span class="n">select</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>number: 24
+</pre></div>
+</div>
+</div>
+</div>
+<p>There are only 24 sources in the (3.5,4.5) redshift bin. For this small sample case, a better solution is using the small sample approximation KDE method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf3</span><span class="o">=</span><span class="n">kdeLF</span><span class="o">.</span><span class="n">KdeLF</span><span class="p">(</span><span class="n">sample_file</span><span class="o">=</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="n">solid_angle</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span> <span class="n">f_lim</span><span class="o">=</span><span class="n">f_lim</span><span class="p">,</span> 
+                <span class="n">H0</span><span class="o">=</span><span class="n">H0</span><span class="p">,</span> <span class="n">Om0</span><span class="o">=</span><span class="n">Om0</span><span class="p">,</span> <span class="n">adaptive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">small_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">lf3</span><span class="o">.</span><span class="n">get_optimal_h</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z &amp; L data loaded
+Maximum likelihood estimation by scipy.optimize &#39;Powell&#39; method,
+redshift bin: ( 3.5 , 4.5 )
+sample size of this bin: 24
+bandwidth for 1d estimator,
+    bound for h:   (0.001, 1.0)
+    Optimal h:     0.2928
+pilot bandwidth:
+    hp: 0.2928 
+
+global bandwidth and beta for adaptive 1d estimator,
+    Initial h0 &amp; beta:      [0.29283326 0.3       ]
+    bounds for h0 &amp; beta:   [(0.001, 1.0), (0.01, 1.0)]
+    Optimal h0 &amp; beta:
+         0.3916 1.0000
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.3916132, 1.       ])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_plot</span><span class="o">=</span><span class="mf">4.0</span>
+<span class="n">lfk1a</span><span class="o">=</span><span class="n">lf3</span><span class="o">.</span><span class="n">get_lgLF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">blf</span><span class="o">=</span><span class="n">lf3</span><span class="o">.</span><span class="n">get_binLF</span><span class="p">(</span><span class="n">Lbin</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plot_lfs</span><span class="p">(</span><span class="n">z_plot</span><span class="o">=</span><span class="n">z_plot</span><span class="p">,</span><span class="n">lfk1a</span><span class="o">=</span><span class="n">lfk1a</span><span class="p">,</span><span class="n">lfka</span><span class="o">=</span><span class="n">lfka</span><span class="p">,</span><span class="n">blf</span><span class="o">=</span><span class="n">blf</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_47_0.png" src="../_images/quickstart_47_0.png" />
+</div>
+</div>
+</section>
+<section id="mcmc-uncertainty-estimation">
+<h2>MCMC &amp; uncertainty estimation<a class="headerlink" href="#mcmc-uncertainty-estimation" title="Permalink to this headline"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">KdeLF.get_optimal_h()</span></code> function can only give the “best-fit” values for the bandwidths. If you want an uncertainty estimation to the bandwidths, you can use the <code class="docutils literal notranslate"><span class="pre">KdeLF.run_mcmc()</span></code> function. It implements a fully Bayesian Markov Chain Monte Carlo (MCMC) method to determine the posterior distributions of bandwidths and other parameters (e.g., <span class="math notranslate nohighlight">\(\beta\)</span> for adaptive KDE). The MCMC core embedded in kdeLF is the Python package <a class="reference external" href="https://emcee.readthedocs.io/en/v3.1.1/">emcee</a>. <code class="docutils literal notranslate"><span class="pre">KdeLF.run_mcmc()</span></code> uses the ensemble MCMC sampler provided by emcee to draw parameter samples from the posterior probability distribution (the adaptive KDE <span class="math notranslate nohighlight">\(\hat{\phi}_{\mathrm{a}}\)</span> for example):</p>
+<div class="math notranslate nohighlight">
+\[
+    p (h_{10},h_{20},\beta\,|\,z_{\mathrm{i}},L_{\mathrm{i}}) \propto p(h_{10},h_{20},\beta)\,p(z_{\mathrm{i}},L_{\mathrm{i}}\,|\,h_{10},h_{20},\beta) \quad ,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(p(z_{\mathrm{i}},L_{\mathrm{i}}\,|\,h_{10},h_{20},\beta)\)</span> is the likelihood function (see Section 2.3 of <a class="reference external" href="https://arxiv.org/abs/2203.06700">(Yuan et al. 2022)</a> for details). Its calculation is completed automatically by the program. <span class="math notranslate nohighlight">\(p(h_{10},h_{20},\beta)\)</span> is the prior distribution, and by default, we use uniform (so-called “uninformative”) priors on <span class="math notranslate nohighlight">\(h_{10}\)</span>, <span class="math notranslate nohighlight">\(h_{20}\)</span>, and <span class="math notranslate nohighlight">\(\beta\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lfmc</span> <span class="o">=</span> <span class="n">kdeLF</span><span class="o">.</span><span class="n">KdeLF</span><span class="p">(</span><span class="n">sample_file</span><span class="o">=</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="n">solid_angle</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="n">Z1</span><span class="p">,</span><span class="n">Z2</span><span class="p">],</span> <span class="n">f_lim</span><span class="o">=</span><span class="n">f_lim</span><span class="p">,</span> 
+                  <span class="n">H0</span><span class="o">=</span><span class="n">H0</span><span class="p">,</span> <span class="n">Om0</span><span class="o">=</span><span class="n">Om0</span><span class="p">,</span> <span class="n">small_sample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">adaptive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">lfmc</span><span class="o">.</span><span class="n">get_optimal_h</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z &amp; L data loaded
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.1151027 , 0.06057506, 0.25046887])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lfmc</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">()</span> 
+<span class="c1"># full parameter usage: lfmc.run_mcmc(max_n=3000, Ntau=50, initial_point=None, </span>
+<span class="c1">#                                     parallel=False, priors=None, chain_analysis=False)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|█████████████████████████          | 2150/3000 [6:02:31&lt;2:23:19, 10.12s/it]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>burn-in: 84
+thin: 16
+flat chain shape: (4128, 3)
+flat log prob shape: (4128,)
+</pre></div>
+</div>
+<img alt="../_images/quickstart_51_2.png" src="../_images/quickstart_51_2.png" />
+</div>
+</div>
+<p>Running the above code is generally time-consuming. It may take several minutes to tens hours, depending on the sample size and your CPU performance. The program incrementally save the state of the chain to a <a class="reference external" href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF5</a> file (suppose you have the <a class="reference external" href="http://www.h5py.org">h5py library</a> installed). The code will run the chain for up to <code class="docutils literal notranslate"><span class="pre">max_n</span></code> (default=3000) steps and check the autocorrelation time every 50 steps. If the chain is longer than <code class="docutils literal notranslate"><span class="pre">Ntau</span></code> (default=50) times the estimated autocorrelation time and if this estimate changed by less than 1%, we’ll consider it converged. Larger values of <code class="docutils literal notranslate"><span class="pre">Ntau</span></code> will be more conservative, but they will also require longer chains (see the <a class="reference external" href="https://emcee.readthedocs.io/en/v3.1.1/tutorials/autocorr/">emcee document</a> for details).</p>
+<p>A successful running will produce a figure showing the autocorrelation time estimate as a function of chain length. If the chain converges, the blue curve should cross the black dashed line. You will also find a ‘.h5’ file like ‘chain_a0.01_4.9.h5’ (automatically named by the program) in the current folder. Then we use the <code class="docutils literal notranslate"><span class="pre">KdeLF.chain_analysis()</span></code> function to visualize the chain:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lfmc</span><span class="o">.</span><span class="n">chain_analysis</span><span class="p">(</span><span class="s1">&#39;chain_a0.01_4.9.h5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>burn-in: 84
+thin: 16
+flat chain shape: (4128, 3)
+flat log prob shape: (4128,)
+ 
+********** MCMC bestfit and 1 sigma errors **********
+ h10 = 0.1307 - 0.0205 + 0.0233
+ h20 = 0.0666 - 0.0102 + 0.0109
+beta = 0.2302 - 0.0323 + 0.0331
+ 
+</pre></div>
+</div>
+<img alt="../_images/quickstart_53_1.png" src="../_images/quickstart_53_1.png" />
+<img alt="../_images/quickstart_53_2.png" src="../_images/quickstart_53_2.png" />
+</div>
+</div>
+<p>Now we can get the posterior distributions for LFs using the <code class="docutils literal notranslate"><span class="pre">KdeLF.plot_posterior()</span></code> function. This will return a tuple containing the arrays of <span class="math notranslate nohighlight">\(L\)</span>, the posterior median LFs, and the errors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf0_5</span> <span class="o">=</span> <span class="n">lfmc</span><span class="o">.</span><span class="n">plot_posterior_LF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">lums</span><span class="p">,</span> <span class="n">phi_mcmc</span><span class="p">,</span> <span class="n">lower_error</span><span class="p">,</span> <span class="n">upper_error</span> <span class="o">=</span> <span class="n">lf0_5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|███████████████████████████████████████| 1500/1500 [00:22&lt;00:00, 66.90it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s plot the result. The red curve shows our MCMC best-fit LF, which is represented by the median of the posterior probability distribution function. The orange shaded area shows the 3<span class="math notranslate nohighlight">\(\sigma\)</span> uncertainty (99.93% equal-tailed credible interval).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_lfs_mcmc</span><span class="p">(</span><span class="n">z_plot</span><span class="p">,</span> <span class="n">blf</span><span class="p">,</span> <span class="n">lf_mcmc</span><span class="p">):</span>
+    <span class="n">lums</span><span class="p">,</span> <span class="n">phi_mcmc</span><span class="p">,</span> <span class="n">lower_error</span><span class="p">,</span> <span class="n">upper_error</span> <span class="o">=</span> <span class="n">lf_mcmc</span>
+    <span class="n">lum</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">22.0</span><span class="p">,</span><span class="mf">29.0</span><span class="p">)</span>
+    <span class="n">phi</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">phi_true</span><span class="p">(</span><span class="n">z_plot</span><span class="p">,</span><span class="n">lum</span><span class="p">))</span> 
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span> 
+    <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.13</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.82</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lum</span><span class="p">,</span><span class="n">phi</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\phi_{\mathrm</span><span class="si">{true}</span><span class="s1">}$&#39;</span><span class="p">)</span>
+
+    <span class="c1">###############  plot the posterior distributions for LFs ##############</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">lums</span><span class="p">,</span> <span class="n">lower_error</span><span class="p">,</span> <span class="n">y2</span><span class="o">=</span><span class="n">upper_error</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lums</span><span class="p">,</span> <span class="n">phi_mcmc</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\phi}_{\mathrm{a,MCMC}}$&#39;</span><span class="p">)</span>
+
+     <span class="c1">###############  plot the binning LFs with errorbars ###################</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">mfc</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span><span class="n">mec</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span><span class="n">mew</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\phi}_{\mathrm</span><span class="si">{bin}</span><span class="s1">}$&#39;</span><span class="p">)</span>  
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">blf</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">blf</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+                <span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">blf</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">blf</span><span class="p">[</span><span class="mi">5</span><span class="p">])),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\log_</span><span class="si">{10}</span><span class="s1">( \phi(z,L) ~/~ {\rm Mpc}^{-3} ~ \Delta L^{-1} )$&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$L$&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span> 
+    <span class="n">plottitle</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$z=</span><span class="si">{0:.2f}</span><span class="s1">$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_plot</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">plottitle</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.01</span><span class="p">)</span>    
+    <span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="o">=</span><span class="nb">max</span><span class="p">((</span><span class="nb">min</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">lum</span><span class="p">)),</span> <span class="nb">min</span><span class="p">((</span><span class="nb">max</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lum</span><span class="p">))</span>
+    <span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">blf</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">blf</span><span class="o">=</span><span class="n">lfmc</span><span class="o">.</span><span class="n">get_binLF</span><span class="p">(</span><span class="n">Lbin</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>    <span class="c1"># get the binning LFs</span>
+<span class="n">plot_lfs_mcmc</span><span class="p">(</span><span class="n">z_plot</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">blf</span><span class="o">=</span><span class="n">blf</span><span class="p">,</span> <span class="n">lf_mcmc</span><span class="o">=</span><span class="p">(</span><span class="n">lums</span><span class="p">,</span> <span class="n">phi_mcmc</span><span class="p">,</span> <span class="n">lower_error</span><span class="p">,</span> <span class="n">upper_error</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_58_0.png" src="../_images/quickstart_58_0.png" />
+</div>
+</div>
+<p>The following lines of code implement the small sample approximation KDE method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf1a</span> <span class="o">=</span> <span class="n">kdeLF</span><span class="o">.</span><span class="n">KdeLF</span><span class="p">(</span><span class="n">sample_file</span><span class="o">=</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="n">solid_angle</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span> <span class="n">f_lim</span><span class="o">=</span><span class="n">f_lim</span><span class="p">,</span> 
+                  <span class="n">H0</span><span class="o">=</span><span class="n">H0</span><span class="p">,</span> <span class="n">Om0</span><span class="o">=</span><span class="n">Om0</span><span class="p">,</span> <span class="n">small_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">adaptive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">lf1a</span><span class="o">.</span><span class="n">get_optimal_h</span><span class="p">(</span><span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z &amp; L data loaded
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.3916132, 1.       ])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf1a</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span><span class="n">initial_point</span><span class="o">=</span><span class="p">[</span><span class="mf">0.39</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|██████████████████████▊                | 1750/3000 [00:33&lt;00:23, 52.30it/s]
+</pre></div>
+</div>
+<img alt="../_images/quickstart_61_1.png" src="../_images/quickstart_61_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf1a</span><span class="o">.</span><span class="n">chain_analysis</span><span class="p">(</span><span class="s1">&#39;chain_a3.5_4.5.h5&#39;</span><span class="p">)</span>         
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>burn-in: 67
+thin: 15
+flat chain shape: (3584, 2)
+flat log prob shape: (3584,)
+ 
+********** MCMC bestfit and 1 sigma errors **********
+ h0 = 0.3553 - 0.1099 + 0.1384
+beta = 0.6765 - 0.3360 + 0.2317
+ 
+</pre></div>
+</div>
+<img alt="../_images/quickstart_62_1.png" src="../_images/quickstart_62_1.png" />
+<img alt="../_images/quickstart_62_2.png" src="../_images/quickstart_62_2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lf4_0</span> <span class="o">=</span> <span class="n">lf1a</span><span class="o">.</span><span class="n">plot_posterior_LF</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span><span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">3000</span><span class="p">))</span>
+<span class="n">lums</span><span class="p">,</span> <span class="n">phi_mcmc</span><span class="p">,</span> <span class="n">lower_error</span><span class="p">,</span> <span class="n">upper_error</span> <span class="o">=</span> <span class="n">lf4_0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████████████████████████████████| 3000/3000 [00:14&lt;00:00, 208.11it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">blf</span><span class="o">=</span><span class="n">lf1a</span><span class="o">.</span><span class="n">get_binLF</span><span class="p">(</span><span class="n">Lbin</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zbin</span><span class="o">=</span><span class="p">[</span><span class="mf">3.5</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span><span class="n">plot_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>    <span class="c1"># get the binning LFs</span>
+<span class="n">plot_lfs_mcmc</span><span class="p">(</span><span class="n">z_plot</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">blf</span><span class="o">=</span><span class="n">blf</span><span class="p">,</span> <span class="n">lf_mcmc</span><span class="o">=</span><span class="p">(</span><span class="n">lums</span><span class="p">,</span> <span class="n">phi_mcmc</span><span class="p">,</span> <span class="n">lower_error</span><span class="p">,</span> <span class="n">upper_error</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_64_0.png" src="../_images/quickstart_64_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../user/faq.html" class="btn btn-neutral float-left" title="FAQ" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot.html" class="btn btn-neutral float-right" title="Plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-today, Zunli Yuan &amp; contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
